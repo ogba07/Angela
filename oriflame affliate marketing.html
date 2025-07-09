@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angela's Boutique</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0c3fc 100%);
+            min-height: 100vh;
+        }
+        header {
+            background: #7f53ac;
+            color: #fff;
+            padding: 30px 0 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(127,83,172,0.08);
+            position: relative;
+        }
+        main {
+            padding: 40px 0;
+            display: flex;
+            justify-content: center;
+        }
+        section {
+            width: 90%;
+            max-width: 900px;
+        }
+        h2 {
+            color: #7f53ac;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .product {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(127,83,172,0.10);
+            padding: 24px 18px 18px 18px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            transition: box-shadow 0.2s;
+        }
+        .product:hover {
+            box-shadow: 0 8px 32px rgba(127,83,172,0.18);
+        }
+        .product img {
+            border-radius: 10px;
+            border: 2px solid #e0c3fc;
+            background: #f8fafc;
+        }
+        .product h3 {
+            margin: 0 0 8px 0;
+            color: #7f53ac;
+        }
+        .product p {
+            margin: 0 0 8px 0;
+        }
+        .product button {
+            background: linear-gradient(90deg, #7f53ac 0%, #647dee 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .product button:hover {
+            background: linear-gradient(90deg, #647dee 0%, #7f53ac 100%);
+        }
+        #buyerFormModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(127,83,172,0.18);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #buyerForm {
+            background: #fff;
+            padding: 28px 22px 18px 22px;
+            border-radius: 12px;
+            min-width: 320px;
+            box-shadow: 0 8px 32px rgba(127,83,172,0.18);
+        }
+        #buyerForm input, #buyerForm textarea {
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 8px;
+            border: 1px solid #e0c3fc;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: #f8fafc;
+        }
+        #buyerForm label {
+            font-weight: 500;
+            color: #7f53ac;
+        }
+        #buyerForm button[type="submit"] {
+            background: linear-gradient(90deg, #7f53ac 0%, #647dee 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        #buyerForm button[type="submit"]:hover {
+            background: linear-gradient(90deg, #647dee 0%, #7f53ac 100%);
+        }
+        #buyerForm button[type="button"] {
+            background: #eee;
+            color: #7f53ac;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        #productSummary {
+            background: #f8fafc;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 16px;
+            color: #7f53ac;
+            font-weight: 500;
+        }
+        footer {
+            background: #7f53ac;
+            color: #fff;
+            text-align: center;
+            padding: 18px 0 10px 0;
+            margin-top: 40px;
+            box-shadow: 0 -2px 8px rgba(127,83,172,0.08);
+        }
+        #cartIcon {
+            position: absolute;
+            top: 32px;
+            right: 40px;
+            cursor: pointer;
+            z-index: 1100;
+        }
+        #cartCount {
+            background: #7f53ac;
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 1em;
+            vertical-align: top;
+            margin-left: -10px;
+        }
+        #cartModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(127,83,172,0.18);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        #cartModal > div {
+            background: #fff;
+            padding: 28px 22px 18px 22px;
+            border-radius: 12px;
+            min-width: 320px;
+            box-shadow: 0 8px 32px rgba(127,83,172,0.18);
+            max-width: 90vw;
+        }
+        #cartItems {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 18px 0;
+        }
+        #cartItems li {
+            margin-bottom: 8px;
+        }
+        #proceedToBuyCartBtn {
+            background: linear-gradient(90deg, #7f53ac 0%, #647dee 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        #proceedToBuyCartBtn:hover {
+            background: linear-gradient(90deg, #647dee 0%, #7f53ac 100%);
+        }
+        #closeCartBtn {
+            background: #eee;
+            color: #7f53ac;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        @media (max-width: 700px) {
+            .product {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            main {
+                padding: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Angela's Boutique</h1>
+        <div id="cartIcon">
+            <span style="font-size:1.7em;">🛒</span>
+            <span id="cartCount">0</span>
+        </div>
+    </header>
+    <main>
+        <section>
+            <h2>Products</h2>
+            <div class="product" data-product-name="Gel" data-product-price="N20,000">
+                <img src="Gel.jpg" alt="Gel" style="width:150px;height:150px;">
+                <h3>Gel</h3>
+                <p>High-quality product for your needs.</p>
+                <p><strong>N20,000</strong></p>
+                <button class="addToCartBtn">Add to Cart</button>
+            </div>
+            <div class="product" data-product-name="Body Lotion" data-product-price="N15,000">
+                <img src="body lotion.jpg" alt="Body Lotion" style="width:150px;height:150px;">
+                <h3>Body Lotion</h3>
+                <p>Moisturizing lotion for smooth skin.</p>
+                <p><strong>N15,000</strong></p>
+                <button class="addToCartBtn">Add to Cart</button>
+            </div>
+            <!-- Add more product listings here -->
+        </section>
+    </main>
+    <!-- Cart Modal -->
+    <div id="cartModal">
+        <div>
+            <h3 style="color:#7f53ac;margin-top:0;">Your Cart</h3>
+            <ul id="cartItems" style="list-style:none;padding:0;margin:0 0 18px 0;"></ul>
+            <button id="proceedToBuyCartBtn" style="background:linear-gradient(90deg,#7f53ac 0%,#647dee 100%);color:#fff;border:none;border-radius:6px;padding:10px 22px;font-size:1rem;cursor:pointer;margin-right:10px;">Proceed to Buy</button>
+            <button id="closeCartBtn" style="background:#eee;color:#7f53ac;border:none;border-radius:6px;padding:10px 22px;font-size:1rem;cursor:pointer;">Close</button>
+        </div>
+    </div>
+    <!-- Buyer Details Form Modal -->
+    <div id="buyerFormModal">
+        <form id="buyerForm">
+            <h3>Buyer Details</h3>
+            <div id="productSummary" style="margin-bottom:10px;"></div>
+            <input type="hidden" id="productNamesField" name="productNames">
+            <input type="hidden" id="productPricesField" name="productPrices">
+            <label for="buyerName">Name:</label>
+            <input type="text" id="buyerName" name="buyerName" required>
+            <label for="buyerEmail">Email:</label>
+            <input type="email" id="buyerEmail" name="buyerEmail" required>
+            <label for="buyerAddress">Address:</label>
+            <textarea id="buyerAddress" name="buyerAddress" required></textarea>
+            <label for="buyerPhone">Phone:</label>
+            <input type="tel" id="buyerPhone" name="buyerPhone" required>
+            <button type="submit">Submit</button>
+            <button type="button" id="closeFormBtn">Cancel</button>
+        </form>
+    </div>
+    <footer>
+        <p>&copy; 2023 Our Product Store</p>
+        <div style="background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(127,83,172,0.10); padding:18px 18px; margin:30px auto 0 auto; max-width:700px; text-align:center; margin-top:20px;">
+            <h3 style="color:#7f53ac; margin-top:0; text-align:center;">Contact Us</h3>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:32px; margin:12px 0;">
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.3em;">📞</span>
+                    <a href="tel:+2348166196157" style="color:#647dee; text-decoration:none; font-size:1.08em;">+2348166196157</a>
+                </span>
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.3em;">✉️</span>
+                    <a href="mailto:ambassadorjohn12@gmail.com" style="color:#647dee; text-decoration:none; font-size:1.08em;">ambassadorjohn12@gmail.com</a>
+                </span>
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.3em;">💬</span>
+                    <a href="https://wa.me/2348166196157" target="_blank" style="color:#25d366; text-decoration:none; font-size:1.08em;">
+                        Chat on WhatsApp
+                    </a>
+                </span>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Cart logic
+        var cart = [];
+        function updateCartCount() {
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+        function updateCartModal() {
+            var cartItems = document.getElementById('cartItems');
+            cartItems.innerHTML = '';
+            if(cart.length === 0) {
+                cartItems.innerHTML = '<li style="color:#7f53ac;">Your cart is empty.</li>';
+                document.getElementById('proceedToBuyCartBtn').disabled = true;
+            } else {
+                cart.forEach(function(item, idx) {
+                    var li = document.createElement('li');
+                    li.style.marginBottom = '8px';
+                    li.innerHTML = 
+                        '<span style="color:#7f53ac;font-weight:500;">' + item.name + '</span> - ' +
+                        '<span style="color:#333;">' + item.price + '</span> ' +
+                        '<button onclick="removeFromCart(' + idx + ')" style="background:#eee;color:#7f53ac;border:none;border-radius:4px;padding:2px 8px;font-size:0.9em;cursor:pointer;margin-left:8px;">Remove</button>';
+                    cartItems.appendChild(li);
+                });
+                document.getElementById('proceedToBuyCartBtn').disabled = false;
+            }
+        }
+        function removeFromCart(idx) {
+            cart.splice(idx, 1);
+            updateCartCount();
+            updateCartModal();
+        }
+        window.removeFromCart = removeFromCart;
+
+        document.querySelectorAll('.addToCartBtn').forEach(function(btn) {
+            btn.onclick = function() {
+                var productDiv = this.closest('.product');
+                var productName = productDiv.getAttribute('data-product-name');
+                var productPrice = productDiv.getAttribute('data-product-price');
+                cart.push({name: productName, price: productPrice});
+                updateCartCount();
+            };
+        });
+
+        document.getElementById('cartIcon').onclick = function() {
+            updateCartModal();
+            document.getElementById('cartModal').style.display = 'flex';
+        };
+        document.getElementById('closeCartBtn').onclick = function() {
+            document.getElementById('cartModal').style.display = 'none';
+        };
+
+        // Proceed to Buy from Cart
+        document.getElementById('proceedToBuyCartBtn').onclick = function() {
+            if(cart.length === 0) return;
+            // Prepare summary
+            var names = cart.map(function(item){return item.name;});
+            var prices = cart.map(function(item){return item.price;});
+            document.getElementById('productNamesField').value = names.join(', ');
+            document.getElementById('productPricesField').value = prices.join(', ');
+            document.getElementById('productSummary').innerHTML = 
+                '<strong>Products:</strong> ' + names.join(', ') + '<br><strong>Prices:</strong> ' + prices.join(', ');
+            document.getElementById('buyerFormModal').style.display = 'flex';
+            document.getElementById('cartModal').style.display = 'none';
+        };
+
+        // Show form on button click and attach product info
+        document.querySelectorAll('.proceedToBuyBtn').forEach(function(btn) {
+            btn.onclick = function() {
+                var productDiv = this.closest('.product');
+                var productName = productDiv.getAttribute('data-product-name');
+                var productPrice = productDiv.getAttribute('data-product-price');
+                document.getElementById('productNameField').value = productName;
+                document.getElementById('productPriceField').value = productPrice;
+                document.getElementById('productSummary').innerHTML = 
+                    '<strong>Product:</strong> ' + productName + '<br><strong>Price:</strong> ' + productPrice;
+                document.getElementById('buyerFormModal').style.display = 'flex';
+            };
+        });
+        // Hide form on cancel
+        document.getElementById('closeFormBtn').onclick = function() {
+            document.getElementById('buyerFormModal').style.display = 'none';
+        };
+        // Optionally handle form submission
+        document.getElementById('buyerForm').onsubmit = function(e) {
+            e.preventDefault();
+            alert('Thank you for your purchase!');
+            document.getElementById('buyerFormModal').style.display = 'none';
+            cart = [];
+            updateCartCount();
+            // Here you can add code to send form data to your server if needed
+        };
+    </script>
+</body>
+</html>
